@@ -1,0 +1,63 @@
+---
+# tasks file for win_wecsvc
+
+- name: Clear things
+  file:
+    state: absent
+    path: /tmp/Subscriptions
+  delegate_to: 127.0.0.1
+
+- name: Create fragment directory
+  file:
+    state: directory
+    path: /tmp/Subscriptions
+  delegate_to: 127.0.0.1
+
+- name: Copy required fragments
+  copy:
+    src: "./files/{{ item }}.xml"
+    dest: "/tmp/Subscriptions/{{ ansible_hostname }}/"
+  loop: "{{ subscriptions }}"
+  delegate_to: 127.0.0.1
+  
+- name: Generate Subscription rules
+  assemble:
+    src: "/tmp/Subscriptions/{{ ansible_hostname }}/"
+    dest: "/tmp/Subscriptions/{{ ansible_hostname }}.rules"
+  delegate_to: 127.0.0.1
+  tags:
+    - generate_rules
+
+- name: read the Output File
+  set_fact:
+    in_file: "{{ lookup('file', '/tmp/Subscriptions/{{ ansible_hostname}}.rules') }}"
+  delegate_to: 127.0.0.1
+
+#- name: count iteration steps
+#  debug:
+#    msg: "{{ in_file | regex_findall('query_count') | length }}"
+#  delegate_to: 127.0.0.1
+
+- name: Template output file
+  shell: "sed -i -e '0,/{{'{{ query_count }}'}}/ s/{{'{{ query_count }}'}}/{{ index }}/' /tmp/Subscriptions/{{ ansible_hostname}}.rules"
+  loop: "{{ in_file  | regex_findall('query_count') }}"
+  loop_control:
+    index_var: index
+  delegate_to: 127.0.0.1
+
+- name: Read the rules file
+  set_fact:
+    wecsv_query: "{{ lookup('file', '/tmp/Subscriptions/{{ ansible_hostname}}.rules') }}"
+  delegate_to: 127.0.0.1
+
+- win_file:
+    state: directory
+    path: "{{ template_dst }}"
+  when: ansible_os_family == "Windows"
+
+- name: Copy template to dst
+  template:
+    src: Subscription.xml.j2
+    dest: "{{ template_dst }}/{{ ansible_hostname }}-{{ wecsv_subscription_name | replace (' ','_') }}.xml"
+
+

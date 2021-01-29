@@ -1,0 +1,36 @@
+<Subscription xmlns="http://schemas.microsoft.com/2006/03/windows/events/subscription">
+	<SubscriptionId>{{ wecsv_subscription_name | default("WECSV Subscription") }}</SubscriptionId>
+	<SubscriptionType>SourceInitiated</SubscriptionType>
+	<Description>Ansible generated subscription file</Description>
+	<Enabled>true</Enabled>
+	<Uri>http://schemas.microsoft.com/wbem/wsman/1/windows/EventLog</Uri>
+	<ConfigurationMode>Custom</ConfigurationMode>
+	<Delivery Mode="Push">
+		<Batching>
+			<MaxItems>{{ wecsvc_batching_items | default(5) }}</MaxItems>
+			<MaxLatencyTime>{{ wecsvc_batching_latency | default(300000) }}</MaxLatencyTime>
+		</Batching>
+		<PushSettings>
+			<Heartbeat Interval="{{ wecsvc_heartbeat_interval | default(900000) }}"/>
+		</PushSettings>
+	</Delivery>
+	<Query>
+		<![CDATA[
+
+    <QueryList>
+{{ wecsv_query }}
+    </QueryList>
+		]]>
+	</Query>
+	<ReadExistingEvents>{{ wecsvc_read_existing | default("true") }}</ReadExistingEvents>
+	<TransportName>HTTP</TransportName>
+	<ContentFormat>Events</ContentFormat>
+	<Locale Language="en-US"/>
+	<LogFile>ForwardedEvents</LogFile>
+	<PublisherName>Microsoft-Windows-EventCollector</PublisherName>
+	<AllowedSourceNonDomainComputers>
+		<AllowedIssuerCAList>
+		</AllowedIssuerCAList>
+	</AllowedSourceNonDomainComputers>
+	<AllowedSourceDomainComputers>O:NSG:NSD:{{ wecsvc_source_domain_computers | default ("(A;;GA;;;NS)(A;;GA;;;DC)") }}</AllowedSourceDomainComputers>
+</Subscription>

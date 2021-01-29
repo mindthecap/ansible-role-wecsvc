@@ -1,0 +1,39 @@
+---
+
+- name: Get service status
+  win_service:
+    name: wecsvc
+  register: wecsvc_service
+
+- name: Enable WECSV
+  win_shell: wevtutil /qc /q
+  when:
+    - not wecsvc_service.start_mode == "delayed"
+    - not wecsvc_service.state == "running"
+  register: wecsvc_service_started
+  tags:
+    - never
+    - wecsvc_install
+
+- name: Set Forwardedevents maxsize
+  win_shell: "wevtutil sl ForwardedEvents /ms:{{ wecsvc_events_maxsize }}"
+  tags:
+    - never
+    - wecsvc_install
+
+- name: Fix MS bug
+  win_shell: "{{ item }}"
+  with_items:
+    - 'netsh http delete urlacl url=http://+:5985/wsman/'
+    - 'netsh http add urlacl url=http://+:5985/wsman/ sddl="D:(A;;GX;;;S-1-5-80-569256582-2953403351-2909559716-1301513147-412116970)(A;;GX;;;S-1-5-80-4059739203-877974739-1245631912-527174227-2996563517)"'
+    - 'netsh http delete urlacl url=https://+:5986/wsman/'
+    - 'netsh http add urlacl url=https://+:5986/wsman/ sddl="D:(A;;GX;;;S-1-5-80-569256582-2953403351-2909559716-1301513147-412116970)(A;;GX;;;S-1-5-80-4059739203-877974739-1245631912-527174227-2996563517)"'
+  tags:
+    - never
+    - wecsvc_install
+
+- include: set_vars.yml
+  loop:
+    "{{ wecsvc_subscription }}"
+  loop_control:
+    loop_var: single_subscription

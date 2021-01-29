@@ -1,0 +1,10 @@
+- set_fact:
+    subscriptions: "{{ single_subscription.subscriptions }}"
+
+- set_fact:
+    wecsv_subscription_name: "{{ single_subscription.wecsv_subscription_name }}"
+
+- set_fact:
+    wecsvc_source_domain_computers: "{{ single_subscription.wecsvc_source_domain_computers | join }}"
+
+- include: rule.yml

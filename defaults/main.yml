@@ -1,0 +1,32 @@
+---
+# defaults file for win_wecsvc
+
+# This is for testing only
+ansible_hostname: "127.0.0.1"
+wecsvc_events_maxsize: 10737418240
+wecsvc_install: false
+
+wecsv_palantir_query: ./files/palantir/wef-subscriptions
+# can't use variables right
+wecsvc_service_started: false
+
+template_dst: "C:\Subscriptions"
+# Because of reasons, templating fragment query id is like a ansible variable
+query_count: "query_count"
+
+# This is example of subscriptions
+wecsvc_subscription:
+  - wecsv_subscription_name: "Example"
+    subscriptions:
+      - ADFS
+    wecsvc_source_domain_computers:
+      - "(A;;GA;;;NS)"
+      - "(A;;GA;;;DC)"
+      - "(A;;GA;;;DD)"
+  - wecsv_subscription_name: "Smaller Example"
+    subscriptions:
+      - ADFS
+      - Wireless
+      - Firewall
+    wecsvc_source_domain_computers:
+      - "(A;;GA;;;DD)"
