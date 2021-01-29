@@ -30,15 +30,18 @@ Variables are listed below, along with default values.
 
 
 You can have multiple subscriptions (per host) and put different computers as source.
+
     wecsvc_batching_items: 5
     wecsvc_batching_latency: 300000
     wecsvc_read_existing: false
     wecsvc_heartbeat_interval: 900000
   
 Where to copy templates (this folder is created, if missing)
+
     template_dst: "C:\Subscriptions"
 
 Create required Subscriptions based on file names under ./files (.xml is ommitted here)
+
     # This is example of subscriptions
     wecsvc_subscription:
       - wecsv_subscription_name: "Example"
