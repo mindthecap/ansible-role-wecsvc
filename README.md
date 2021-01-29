@@ -27,9 +27,7 @@ Variables are listed below, along with default values.
     # Because of reasons, templating fragment query id is like a ansible variable
     query_count: "query_count"
 
-
-
-You can have multiple subscriptions (per host) and put different computers as source.
+These are subscription (wecutil) defaults
 
     wecsvc_batching_items: 5
     wecsvc_batching_latency: 300000
@@ -40,6 +38,9 @@ Where to copy templates (this folder is created, if missing)
 
     template_dst: "C:\Subscriptions"
 
+
+
+You can have multiple subscriptions (per host) and put different computers as source.
 Create required Subscriptions based on file names under ./files (.xml is ommitted here)
 
     # This is example of subscriptions
@@ -68,12 +69,16 @@ None.
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Create /etc/ansible/tasks/wefc.yml:
 
     - hosts: win_servers
       roles:
          - win_wecsvc
 
+For installation
+
+    ansible-playbook /etc/ansible/tasks/wefc.yml --tags wecsvc_install,all
+    
 License
 -------
 
