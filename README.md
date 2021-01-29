@@ -82,4 +82,4 @@ For installation
 License
 -------
 
-BSD
+GNU GPLv3 
