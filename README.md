@@ -6,7 +6,7 @@ An ansible role for deploying WEF (Windows Event Forwarding) on scale and with c
 Requirements
 ------------
 
-Palantir rules folder must exist in wecsv_palantir_query location. By default git clone https://github.com/palantir/windows-event-forwarding files/palantir does the trick.
+Palantir rules folder must exist in ./file/palantir/wef-subscriptions. By default git clone https://github.com/palantir/windows-event-forwarding files/palantir does the trick.
 
 Before running the role, query file templating is done by using template.sh. Run it from the role folder (assuming you have cloned the repo to default location).
 
@@ -19,7 +19,6 @@ Variables are listed below, along with default values.
     ansible_hostname: "127.0.0.1"
     wecsvc_events_maxsize: 10737418240
 
-    wecsv_palantir_query: ./files/palantir/wef-subscriptions
     # can't use variables right
     wecsvc_service_started: false
 
