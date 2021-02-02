@@ -6,7 +6,7 @@
   register: wecsvc_service
 
 - name: Enable WECSV
-  win_shell: wevtutil /qc /q
+  win_shell: wevtutil qc /q
   when:
     - not wecsvc_service.start_mode == "delayed"
     - not wecsvc_service.state == "running"
