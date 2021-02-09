@@ -1,4 +1,4 @@
-Role Name
+win_wecsvc
 =========
 
 An ansible role for deploying WEF (Windows Event Forwarding) on scale and with central subscription and query management. It enhances Palantirs "Windows Event Forwarding" query repo (https://github.com/palantir/windows-event-forwarding).
